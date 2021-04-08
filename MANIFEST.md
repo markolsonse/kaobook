@@ -3,7 +3,7 @@
 # First Work: The kaobook Class
 
 MANIFEST.md
-Copyright 2019 Federico Marotta
+Copyright 2020-2021 Federico Marotta
 
 This work may be distributed and/or modified under the
 conditions of the LaTeX Project Public License, either version 1.3
@@ -25,17 +25,12 @@ This work consists of all files listed below.
 
 ```
 kaobook/
-|-- kao.def						- main class file
 |-- kaobook.cls                 - book-specific definitions
 |-- kaohandt.cls                - handout-specific definitions
-|-- styles/
-    |-- environments.sty        - definitions for environments
-	|-- kaobiblio.sty			- style of the bibliography
-    |-- mdftheorems.sty         - colorful styling of theorems
-    |-- packages.sty            - useful packages
-    |-- plaintheorems.sty       - minimalistic styling of theorems
-	|-- kaorefs.sty             - commands for referencing
-    |-- style.sty               - page design
+|-- kao.sty	    				- main definitions
+|-- kaobiblio.sty	    		- style of the bibliography
+|-- kaotheorems.sty             - colorful styling of theorems
+`-- kaorefs.sty                 - commands for referencing
 ```
 
 ---
@@ -48,28 +43,40 @@ neighbouring rights to this work. To view a copy of the CC0 code, visit:
 
   http://creativecommons.org/publicdomain/zero/1.0
 
-This work consists of all files listed below.
+This work consists of all files listed below as well as the products of 
+their compilation.
 
 ---
 
 ```
 kaobook/
-|-- report-template.tex
-|-- book-template.tex
-|-- examples
-	|-- documentation
-		|-- main.tex
-		|-- main.bib
-		|-- chapters/
-			|-- appendix.tex
-			|-- figsntabs.tex
-			|-- introduction.tex
-			|-- layout.tex
-			|-- mathematics.tex
-			|-- options.tex
-			|-- preface.tex
-			|-- references.tex
-			|-- textnotes.tex
+`-- examples/
+    |-- minimal_book/
+    |	`-- main.tex
+    |-- minimal_report/
+    |	`-- main.tex
+	|-- documentation/
+    |	|-- main.tex
+    |	|-- main.bib
+    |	|-- glossary.tex
+	|	`-- chapters/
+	|		|-- appendix.tex
+	|		|-- figsntabs.tex
+	|		|-- introduction.tex
+	|		|-- layout.tex
+	|		|-- mathematics.tex
+	|		|-- options.tex
+	|		|-- preface.tex
+	|		|-- references.tex
+	|		`-- textnotes.tex
+    `-- machine_learning_project/
+        |-- sections/
+        |	|-- introduction.tex
+        |	|-- data.tex
+        |	|-- results.tex
+        |	`-- discussion.tex
+        |-- main.tex
+        `-- main.bib
 ```
 
 As regards the files in the `kaobook/examples/documentation/images` 

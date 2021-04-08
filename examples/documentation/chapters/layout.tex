@@ -1,4 +1,4 @@
-\setchapterimage[6cm]{seaside}
+\setchapterimage[7.5cm]{seaside}
 \setchapterpreamble[u]{\margintoc}
 \chapter{Page Design}
 \labch{layout}
@@ -9,8 +9,7 @@ So far, in this document I used two different styles for the chapter
 headings: one has the chapter name, a rule and, in the margin, the 
 chapter number; the other has an image at the top of the page, and the 
 chapter title is printed in a box (like for this chapter). There is one 
-additional style, which I used only in the appendix 
-(\vrefpage{appendix}); there, the chapter title is enclosed in two 
+additional style, which I used only in the \nrefch{appendix}; there, the chapter title is enclosed in two 
 horizontal rules, and the chapter number (or letter, in the case of the 
 appendix) is above it.\sidenote{To be honest, I do not think that mixing 
 heading styles like this is a wise choice, but in this document I did it 
@@ -45,7 +44,7 @@ In Line 1 I choose the style for the title to be \enquote{kao}. Then, I
 specify that I want the margin toc. The rest is ordinary administration 
 in \LaTeX, except that I use my own \Command{labch} to label the 
 chapter. Actually, the \Command{setchapterpreamble} is a standard 
-\KOMAScript\xspace one, so I invide you to read about it in the KOMA 
+\KOMAScript\xspace one, so I invite you to read about it in the KOMA
 documentation. Once the chapter style is set, it holds until you change 
 it.\sidenote{The \Command{margintoc} has to be specified at every 
 chapter. Perhaps in the future this may change; it all depends on how 
@@ -74,9 +73,9 @@ the front matter. At any rate, the style can be changed with the
 \Command{pagestyle} command, \eg 
 \lstinline|\pagestyle{plain.scrheadings}|.
 
-In both stles, the footer is completely empty. In plain.scrheadings, 
+In both styles, the footer is completely empty. In plain.scrheadings,
 also the header is absent (otherwise it wouldn't be so plain\ldots), but 
-in the normal style the design is reminescent of the \enquote{kao} style 
+in the normal style the design is reminiscent of the \enquote{kao} style
 for chapter titles.
 
 \begin{kaobox}[frametitle=To Do]
@@ -104,7 +103,7 @@ try to add their own entries.\marginnote{In a later section, we will see
 how you can define your own floating environment, and endow it with an 
 entry in the \acrshort{tocLabel}.} In such cases, you have to follow the 
 instructions specific to that package. Here, since we have talked about 
-glossaries and notations in \refch{references}, we will biefly see how 
+glossaries and notations in \refch{references}, we will briefly see how
 to configure them.
 
 \begin{table}
@@ -136,6 +135,53 @@ Read the respective documentations if you want to be able to change the
 default \acrshort{tocLabel} style.\sidenote[][*-1]{(And please, send me 
 a copy of what you have done, I'm so curious!)}
 
+\section{Paper Size}
+
+Recent versions of Kaobook support paper sizes different from the
+default A4. It is possible to pass the name of the paper as an option
+to the class, as we are accustomed for any other \LaTeX\ class. For
+example, the class option \Option{b5paper} would set the paper size
+to the B5 format.
+
+We also support the paper sizes specified in
+\href{https://www.bod.de/hilfe/hilfe-und-service.html?cmd=SINGLE\&entryID=2494\_GER\_WSS\&eo=2\&title=welche-buchformate-gibt-es}{this
+web page} and some additional sizes requested by the users, with the 
+option names specified in \reftab{papersizes}.
+
+\begin{margintable}[*-6]
+	\caption{Some non-standard paper sizes supported by kaobook.}
+	\labtab{papersizes}
+	\begin{tabular}{ll}
+		\toprule
+		Dimension & Option name \\
+		\midrule
+		12.0cm x 19.0cm & smallpocketpaper \\
+		13.5cm x 21.5cm & pocketpaper \\
+		14.8cm x 21.0cm & a5paper \\
+		15.5cm x 22.0cm & juvenilepaper \\
+		17.0cm x 17.0cm & smallphotopaper \\
+		21.0cm x 15.0cm & appendixpaper \\
+		17.0cm x 22.0cm & cookpaper \\
+		19.0cm x 27.0cm & illustratedpaper \\
+		17.0cm x 17.0cm & photopaper \\
+		16.0cm x 24.0cm & f24paper \\
+		%21.0cm x 29.7cm & a4paper \\
+		\bottomrule
+	\end{tabular}
+\end{margintable}
+
+For instance, to use the \enquote{smallpocketpaper} add the correct 
+description at the beginning of the documentclass instruction:
+\begin{lstlisting}
+\documentclass[
+		smallpocketpaper,
+		fontsize=10pt,
+		twoside=false,
+		%open=any,
+		secnumdepth=1,
+]{kaobook}
+\end{lstlisting}
+
 \section{Page Layout}
 
 Besides the page style, you can also change the width of the content of 
@@ -150,6 +196,11 @@ contents, while the latter is the layout used in most of the pages of
 this book, including this one. The wide layout is also used 
 automatically in the front and back matters.
 
+\marginnote{Sometimes it is desirable to increase the width for just one 
+or a few paragraphs; the \Environment{widepar} environment does that: 
+wrap your paragraphs in this environment, and they will occupy the full 
+width of the page.}
+
 To change page layout, use the \Command{pagelayout} command. For 
 example, when I start a new part, I write:
 
@@ -158,6 +209,45 @@ example, when I start a new part, I write:
 \addpart{Title of the New Part}
 \pagelayout{margin}
 \end{lstlisting}
+
+Beyond these two basic layouts, it is also possible to finely tune the 
+page layout by redefining the \Command{marginlayout} command. This 
+command is called internally by the higher-level \Command{pagelayout}, 
+and it is responsible for setting the width of the margins and of the 
+text. The default definition is:
+
+\begin{lstlisting}
+\newcommand{\marginlayout}{%
+	\newgeometry{
+		top=27.4mm,				% height of the top margin
+		bottom=27.4mm,			% height of the bottom margin
+		inner=24.8mm,			% width of the inner margin
+		textwidth=107mm,		% width of the text
+		marginparsep=8.2mm,		% width between text and margin
+		marginparwidth=49.4mm,	% width of the margin
+	}%
+}
+\end{lstlisting}
+
+so if you want to, say, decrease the width of the margin while 
+increasing the width of the text, you could write in the preamble of 
+your document something like:
+
+\begin{lstlisting}
+\renewcommand{\marginlayout}{%
+	\newgeometry{
+		top=27.4mm,				% height of the top margin
+		bottom=27.4mm,			% height of the bottom margin
+		inner=24.8mm,			% width of the inner margin
+		textwidth=117mm,		% width of the text
+		marginparsep=8.2mm,		% width between text and margin
+		marginparwidth=39.4mm,	% width of the margin
+	}%
+}
+\end{lstlisting}
+
+where the text width has been increased by 10mm and the margin width has 
+been decreased by 10mm.
 
 \section{Numbers \& Counters}
 
@@ -193,6 +283,17 @@ tune the white space around objects. There are not fixed rules, each
 object needs its own adjustment. Here we shall see how some spaces are 
 defined at the moment in this class.\marginnote{Attention! This section 
 may be incomplete.}
+
+\textbf{Space around sidenotes and citations marks}
+
+There should be no space before or after sidenotes and citation marks, 
+like so:
+
+sidenote\sidenote{This paragraph can be used to diagnose any problems:
+if you see whitespace around sidenotes or citation marks, probably
+a \% sign is missing somewhere in the definitions of the class
+macros.}sidenote\newline
+citation\cite{James2013}citation
 
 \textbf{Space around figures and tables}
 

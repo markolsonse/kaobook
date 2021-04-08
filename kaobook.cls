@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % kaobook
 % LaTeX Class
-% Version 1.0 (5/6/19)
+% Version 0.9.6 (2021/03/23)
 %
 % This template originates from:
 % https://www.LaTeXTemplates.com
@@ -25,49 +25,45 @@
 %----------------------------------------------------------------------------------------
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{kaobook}[2020/03/12 v1.1 kaobook]
-
-\RequirePackage{xkeyval} % Manage class key-value options
-
-\newcommand{\@classname}{kaobook} % Class name
+\ProvidesClass{kaobook}[2021/03/23 v0.9.6 kaobook]
 \newcommand{\@baseclass}{scrbook} % Base class name
 
+\RequirePackage{kvoptions} % Manage class key-value options
+
+\SetupKeyvalOptions{
+    family = kao,
+    prefix = kao@
+}
+
 % Set the default options
-\PassOptionsToClass{fontsize=9.5pt}{\@baseclass}
+\PassOptionsToClass{a4paper}{\@baseclass}
+\PassOptionsToClass{fontsize=10pt}{\@baseclass}
 \PassOptionsToClass{parskip=half}{\@baseclass}
 \PassOptionsToClass{headings=optiontoheadandtoc}{\@baseclass}
 
-\newcommand{\@secnumdepth}{1} % Set default numbering depth up to sections
-\DeclareOptionX{secnumdepth}{% % Declare secnumdepth as an option
-	\renewcommand{\@secnumdepth}{#1}%
-}
+% Define kao-specific options
+\DeclareStringOption[1]{secnumdepth}
 
-\DeclareOptionX*{\PassOptionsToClass{\CurrentOption}{\@baseclass}} % Pass through any options to the base class
+% Pass through any other options to the base class
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@baseclass}} 
 
-\ProcessOptionsX\relax % Process the options
+\ProcessKeyvalOptions*
+\ProcessOptions\relax % Process the options
 
 \LoadClass{\@baseclass} % Load the base class
-\RequirePackage{styles/kao} % Load the code common to all classes
+\RequirePackage{kao} % Load the code common to all classes
 
 %----------------------------------------------------------------------------------------
 %	FRONT-, MAIN-, BACK- MATTERS BEHAVIOUR
 %----------------------------------------------------------------------------------------
 
-% Define a LaTeX length used in the page headers
-\newlength{\overflowingheadlen}
-
 % Front matter
 \let\oldfrontmatter\frontmatter % Store the old command
-\renewcommand{\frontmatter}{
-	\oldfrontmatter % First of all, call the old command
-
-	% Set some Lengths used for the page headers
-	\setlength{\overflowingheadlen}{\linewidth}
-	\addtolength{\overflowingheadlen}{\marginparsep}
-	\addtolength{\overflowingheadlen}{\marginparwidth}
-
-	\pagestyle{plain.scrheadings} % Use a plain style for the header and the footer
-	\pagelayout{wide} % Use a wide page layout
+\renewcommand{\frontmatter}{%
+	\oldfrontmatter% First of all, call the old command
+	\pagestyle{plain.scrheadings}% Use a plain style for the header and the footer
+	\pagelayout{wide}% Use a wide page layout
+	\setchapterstyle{plain} % Choose the default chapter heading style
 	% \sloppy % Required to better break long lines
 }
 
@@ -75,49 +71,37 @@
 
 % Main matter
 \let\oldmainmatter\mainmatter % Store the old command
-\renewcommand{\mainmatter}{
-
+\renewcommand{\mainmatter}{%
 	% Add a blank page before the main matter if the front matter has an
 	% odd number of pages
-	\ifthispageodd{
-	  \afterpage{\blankpage}
-	}{}
-
-	\oldmainmatter % Call the old command
-
-	% Set some Lengths used for the page headers
-	\setlength{\overflowingheadlen}{\linewidth}
-	\addtolength{\overflowingheadlen}{\marginparsep}
-	\addtolength{\overflowingheadlen}{\marginparwidth}
-
-	\pagestyle{scrheadings} % Use a fancy style for the header and the footer
-	\pagelayout{margin} % Use a 1.5 column layout
+    \Ifthispageodd{%
+	  \afterpage{\blankpage}%
+	}{}%
+	\oldmainmatter% Call the old command
+	\pagestyle{scrheadings}% Use a fancy style for the header and the footer
+	\pagelayout{margin}% Use a 1.5 column layout
+	\setchapterstyle{kao} % Choose the default chapter heading style
 }
 
 %------------------------------------------------
 
 % Appendix
-\let\oldappendix\appendix % Store the old command
-\renewcommand{\appendix}{
-	\oldappendix % Call the old command
-	\bookmarksetup{startatroot} % Reset the bookmark depth
+\let\oldappendix\appendix% Store the old command
+\renewcommand{\appendix}{%
+	\oldappendix% Call the old command
+	\bookmarksetup{startatroot}% Reset the bookmark depth
 }
 
 %------------------------------------------------
 
 % Back matter
-\let\oldbackmatter\backmatter % Store the old command
-\renewcommand{\backmatter}{
-	\oldbackmatter % Call the old command
-
-	% Set some Lengths used for the page headers
-	\setlength{\overflowingheadlen}{\linewidth}
-	\addtolength{\overflowingheadlen}{\marginparsep}
-	\addtolength{\overflowingheadlen}{\marginparwidth}
-
-	\bookmarksetup{startatroot} % Reset the bookmark depth
-	\pagestyle{plain.scrheadings} % Use a plain style for the header and the footer
-	\pagelayout{wide} % Use a wide page layout
+\let\oldbackmatter\backmatter% Store the old command
+\renewcommand{\backmatter}{%
+	\oldbackmatter% Call the old command
+	\bookmarksetup{startatroot}% Reset the bookmark depth
+	\pagestyle{plain.scrheadings}% Use a plain style for the header and the footer
+	\pagelayout{wide}% Use a wide page layout
+	\setchapterstyle{plain} % Choose the default chapter heading style
 }
 
 %----------------------------------------------------------------------------------------
@@ -138,107 +122,89 @@
 		\mbox{\chapappifchapterprefix{\nobreakspace}\thechapter%
 		\autodot\IfUsePrefixLine{}{\enskip}}}
 
-	\RedeclareSectionCommand[beforeskip=0cm,afterskip=1cm]{chapter}
-	\setlength{\mtocshift}{-3.2cm}
+	\RedeclareSectionCommand[beforeskip=0cm,afterskip=10\vscale]{chapter}
+	\setlength{\mtocshift}{-1\vscale}
 }
+
 
 % The Kao style
 \DeclareDocumentCommand{\chapterstylekao}{}{%
 	\renewcommand*{\chapterformat}{%
 		\mbox{\chapappifchapterprefix{\nobreakspace}\scalebox{2.85}{\thechapter\autodot}}%
-	}
+	}%
 	\renewcommand\chapterlinesformat[3]{%
-		\vspace*{-4.5cm}%
-		\makebox[\textwidth+\marginparsep+\marginparwidth]{%
+		\vspace{3.5\vscale}%
+		\smash{\makebox[0pt][l]{%
 			\parbox[b]{\textwidth}{\flushright{##3}}%
-			\makebox[\marginparsep][c]{\rule[-.2cm]{1pt}{5.7cm}}%
+			\makebox[\marginparsep][c]{\rule[-2\vscale]{1pt}{27.4\vscale+\f@size mm}}%
 			\parbox[b]{\marginparwidth}{##2}%
-		}
-	}
-
-	\RedeclareSectionCommand[beforeskip=0cm,afterskip=1cm]{chapter}
-	\setlength{\mtocshift}{0mm}
+		}}%
+	}%
+	\RedeclareSectionCommand[beforeskip=0cm,afterskip=10\vscale]{chapter}%
+    \setlength{\mtocshift}{-3\vscale}%
 }
 
 % Lines
 \renewcommand{\hrulefill}[1][0.4pt]{%
 	\leavevmode\leaders\hrule height #1\hfill\kern\z@%
 }
-\DeclareDocumentCommand{\chapterstylelines}{}
-{
-	\renewcommand*{\chapterformat}
-	{
-	  \chapappifchapterprefix{\nobreakspace}\scalebox{3.5}{\thechapter\autodot}
-	}
-	\renewcommand\chapterlinesformat[3]
-	{
+\DeclareDocumentCommand{\chapterstylelines}{}{%
+	\renewcommand*{\chapterformat}{%
+		\chapappifchapterprefix{\nobreakspace}\scalebox{3.5}{\thechapter\autodot}%
+	}%
+	\renewcommand\chapterlinesformat[3]{%
 	  %\vspace*{-1cm}%
-	  \leavevmode
-	  \makebox[\textwidth+\marginparsep+\marginparwidth]{%
+	  \leavevmode%
+	  \makebox[0pt][l]{%
 		\makebox[\textwidth][l]{\hrulefill[1pt]##2}%\hfill%\par%\bigskip
 		\makebox[\marginparsep][l]{}%
 		\makebox[\marginparwidth][l]{}%
 	  }\\
 	  %\vspace{.5cm}
-	  \makebox[\textwidth+\marginparsep+\marginparwidth]{%
+	  \makebox[0pt][l]{%
 		\makebox[\textwidth][l]{##3}%
 		\makebox[\marginparsep][l]{}%
 		\makebox[\marginparwidth][l]{}%
 	  }\\
-	  \makebox[\textwidth+\marginparsep+\marginparwidth]{%
-		\hrulefill[1.1pt]%
-		%\makebox[\textwidth][l]{\hrulefill}%
-		%\makebox[\marginparsep][l]{\hrulefill}%
-		%\makebox[\marginparwidth][l]{\hrulefill}%
-	  }
-	}
-
-	\RedeclareSectionCommand[beforeskip=0cm,afterskip=1cm]{chapter}
-	\setlength{\mtocshift}{-2.5cm}
+	  \makebox[0pt][l]{%
+		\makebox[\textwidth+\marginparsep+\marginparwidth][l]{\hrulefill[1.1pt]}%
+	  }%
+	}%
+	\RedeclareSectionCommand[beforeskip=0cm,afterskip=10\vscale]{chapter}
+	\setlength{\mtocshift}{-1\vscale}%
 }
 
 % Image (Used internally for \chapterimage; normal users should not need this command)
-\DeclareDocumentCommand{\chapterstyleimage}{}{%
+\DeclareDocumentCommand{\chapterstyleimage}{o m}{%
 	\renewcommand*{\chapterformat}{%
 		\mbox{\chapappifchapterprefix{\nobreakspace}\thechapter%
-		\autodot\IfUsePrefixLine{}{\enskip}}
+		\autodot\IfUsePrefixLine{}{\enskip}}%
 	}
-	\renewcommand{\chapterlinesformat}[3]{%
-		\begin{tikzpicture}[remember picture, overlay]
-			\node[
-				anchor=west,
-				xshift=-3cm,
-				yshift=1.15cm,
-				rectangle,
-				fill=gray!20!white,
-				fill opacity=0.8,
-				inner ysep=14pt,
-				inner xsep=3cm,
-				text opacity=1,
-				text width=\paperwidth+3cm, % Set text width in order to force left-alignment
-			]{\makebox[0pt][l]{\@hangfrom{##2}{##3}}};
-			\node[
-				anchor=west,
-				xshift=-3cm,
-				yshift=2mm,
-				rectangle,
-				fill=white,
-				minimum height=.5cm,
-				minimum width=\paperwidth+3cm,
-			]{};
-		\end{tikzpicture}
+    \renewcommand{\chapterlinesformat}[3]{%
+        \begin{tikzpicture}[remember picture, overlay]
+            \node (image) at (current page.north west) [
+                anchor=north west,
+                inner sep=0pt,
+                outer sep=0pt,
+            ]{\includegraphics[width=\paperwidth,height=#1,keepaspectratio=false]{#2}};
+            \node at (image.south west) [
+                anchor=south west,
+                inner ysep=5\vscale,
+                inner xsep=\hoffset+\oddsidemargin+1in,%30\hscale,
+                outer sep=-0.5pt,
+                fill=gray!20!white,
+                fill opacity=0.8,
+                text width=\textwidth+\marginparsep+\marginparwidth,
+            ]{\@hangfrom{##2}{##3}};
+        \end{tikzpicture}
 	}
 }
 
 % Takes as input the image path and optionally the "beforeskip"
-\DeclareDocumentCommand{\setchapterimage}{O{5.5cm} m}{%
-	\setchapterpreamble[o]{%
-		\vspace*{-2.7cm}\hspace*{-2.5cm}%
-		\includegraphics[width=\paperwidth,height=#1+2.7cm,keepaspectratio=false]{#2}%
-	}%
-	\chapterstyleimage%
+\DeclareDocumentCommand{\setchapterimage}{O{92\vscale} m}{%
+    \chapterstyleimage[#1]{#2}%
 	% beforeskip=-(figure_height-top_margin)
-	\RedeclareSectionCommand[beforeskip=-#1, afterskip=.6cm]{chapter}%
+    \RedeclareSectionCommand[beforeskip=\dimexpr #1 - \voffset - 1in, afterskip=6\vscale]{chapter}%
 	\setlength{\mtocshift}{0cm}%
 }
 
@@ -274,7 +240,7 @@
 %	NUMBERING
 %----------------------------------------------------------------------------------------
 
-\setcounter{secnumdepth}{\@secnumdepth} % Set section numbering depth
+\setcounter{secnumdepth}{\kao@secnumdepth} % Set section numbering depth
 
 \counterwithin*{sidenote}{chapter} % Uncomment to reset the sidenote counter at each chapter
 %\counterwithout{sidenote}{chapter} % Uncomment to have one sidenote counter for the whole document
