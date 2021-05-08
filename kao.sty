@@ -1,4 +1,4 @@
-\ProvidesPackage{styles/kao}
+\ProvidesPackage{kao}
 
 %----------------------------------------------------------------------------------------
 %	USEFUL PACKAGES AND COMMANDS
@@ -234,13 +234,24 @@
 
 % Style with an empty header and the page number in the footer
 \newpagestyle{pagenum.scrheadings}{%
-	{}%
-	{}%
-	{}%
+    {}%
+    {}%
+    {}%
 }{%
-	{\thepage}%
-	{\hfill\thepage}%
-	{}%
+    {\makebox[\textwidth][r]{\thepage}}%
+    {\makebox[\textwidth][l]{\thepage}}%
+    {\makebox[\textwidth][l]{\thepage}}%
+}
+
+% Style with an empty header and the page number in the footer
+\newpagestyle{centeredpagenum.scrheadings}{%
+    {}%
+    {}%
+    {}%
+}{%
+    {\hspace{-\headmarginparwidth}\hspace{-\headmarginparsep}\makebox[\headtotal][l]{\hfill\thepage\hfill}}
+    {\makebox[0pt][l]{\makebox[\headtotal][r]{\hfill\thepage\hfill}}}%
+    {\makebox[0pt][l]{\makebox[\headtotal][r]{\hfill\thepage\hfill}}}%
 }
 
 % Command to print a blank page
@@ -1034,11 +1045,11 @@
 	\RequirePackage[utf8]{inputenc} % utf8 encoding in the input (.tex) file
 	\RequirePackage[T1]{fontenc} % utf8 encoding in the output (.pdf) file
 
+	\RequirePackage{amssymb} % Math symbols, including \blacktriangleright, used for bullets
 	\RequirePackage[scaled=.97,helvratio=.93,p,theoremfont]{newpxtext} % Serif palatino font
 	\RequirePackage[vvarbb,smallerops,bigdelims]{newpxmath} % Math palatino font
 	\RequirePackage[scaled=.85]{beramono} % Monospace font
 	\RequirePackage[scr=rsfso,cal=boondoxo]{mathalfa} % Mathcal from STIX, unslanted a bit
-	\RequirePackage{amssymb} % Math symbols, including \blacktriangleright, used for bullets
     \RequirePackage{morewrites} % Fix some errors related to floats
 \fi
 
